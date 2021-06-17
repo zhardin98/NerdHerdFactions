@@ -9,9 +9,12 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.PluginDescriptionFile;
+import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import net.md_5.bungee.api.ChatColor;
+
+import me.ZacharyPeculier.NerdHerdFactions.Listeners.PlayerListener;
 
 public class core extends JavaPlugin
 {
@@ -20,15 +23,15 @@ public class core extends JavaPlugin
     int spawnX = 0;
     int spawnY = 69;
     int spawnZ = 0;
-    
-    
+
+
     @Override
     public void onDisable()
     {
     	PluginDescriptionFile pdFile = this.getDescription();
         this.logger.info(pdFile.getName() + " version " + pdFile.getVersion() + " has been deactivated!");
     }
-    
+
     @Override
     public void onEnable()
     {
@@ -37,8 +40,11 @@ public class core extends JavaPlugin
         world = getServer().getWorld("world");
         world.setSpawnLocation(spawnX, spawnY, spawnZ);
         saveDefaultConfig();
+
+        PluginManager plm = this.getServer().getPluginManager();
+        plm.registerEvents(new PlayerListener(), this);
     }
-    
+
     public boolean onCommand(CommandSender sender, Command cmd, String commandLabel, String[] args)
     {
     	Player player = (Player) sender;
@@ -74,6 +80,5 @@ public class core extends JavaPlugin
     		player.sendMessage(ChatColor.RED + "Unknown command");
     		return false;
     	}
-		
     }
 }
