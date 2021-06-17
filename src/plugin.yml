@@ -1,0 +1,13 @@
+name: NerdHerdFactions
+main: me.ZacharyPeculier.NerdHerdFactions.core
+version: 1.0
+commands:
+  spawn:
+    description: Teleport to spawn.
+    usage: /<command>
+  sethome:
+    description: Set personal home.
+    usage: /<command>
+  home:
+    description: Teleport to home.
+    usage: /<command>
