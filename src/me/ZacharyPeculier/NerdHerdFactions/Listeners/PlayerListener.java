@@ -14,11 +14,17 @@ import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.plugin.java.JavaPlugin;
 
 public class PlayerListener implements Listener 
 {
 	
 	private final Set<UUID> combatPlayers = new HashSet<UUID>();
+	private JavaPlugin plugin;
+	
+	public PlayerListener(JavaPlugin plugin) {
+		this.plugin = plugin;
+	}
 	
     @EventHandler
     public void onPlayerJoin(PlayerJoinEvent event) 
