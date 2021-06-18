@@ -42,7 +42,7 @@ public class core extends JavaPlugin
         saveDefaultConfig();
 
         PluginManager plm = this.getServer().getPluginManager();
-        plm.registerEvents(new PlayerListener(), this);
+        plm.registerEvents(new PlayerListener(this), this);
     }
 
     public boolean onCommand(CommandSender sender, Command cmd, String commandLabel, String[] args)
