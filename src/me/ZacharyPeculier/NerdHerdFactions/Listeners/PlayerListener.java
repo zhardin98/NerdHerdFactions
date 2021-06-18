@@ -4,6 +4,7 @@ import java.util.Set;
 import java.util.HashSet;
 import java.util.UUID;
 
+import org.bukkit.ChatColor;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -14,19 +15,18 @@ import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.inventory.ItemStack;
 
-import net.md_5.bungee.api.ChatColor;
-
-public class PlayerListener implements Listener {
+public class PlayerListener implements Listener 
+{
 	
 	private final Set<UUID> combatPlayers = new HashSet<UUID>();
 	
     @EventHandler
-    public void onPlayerJoin(PlayerJoinEvent event) {
+    public void onPlayerJoin(PlayerJoinEvent event) 
+    {
     	Player player = event.getPlayer();
-    	
-        event.setJoinMessage("Welcome, " + event.getPlayer().getName() + "!");
         
-        if (combatPlayers.contains(player.getUniqueId())) {
+        if (combatPlayers.contains(player.getUniqueId())) 
+        {
         	player.getInventory().clear();
         	player.setHealth(0);
         	combatPlayers.remove(player.getUniqueId());
@@ -34,37 +34,49 @@ public class PlayerListener implements Listener {
     }
 
     @EventHandler
-    public void onPlayerLeave(PlayerQuitEvent event) {
+    public void onPlayerLeave(PlayerQuitEvent event) 
+    {
     	Player player = event.getPlayer();
-        event.setQuitMessage(player.getName() + " has left.");
-        
-        if (combatPlayers.contains(player.getUniqueId())) {
-            for (ItemStack itemStack : player.getInventory().getContents()) {
-            	if (itemStack == null) {
+        if (combatPlayers.contains(player.getUniqueId())) 
+        {
+            for (ItemStack itemStack : player.getInventory().getContents()) 
+            {
+            	if (itemStack == null) 
+            	{
             		continue;
             	}
-            	
+            	event.setQuitMessage(ChatColor.YELLOW + player.getName() + " combat logged");
                 player.getWorld().dropItemNaturally(player.getLocation(), itemStack);
                 player.getInventory().remove(itemStack);
             }
         }
+        else
+        {
+        	event.setQuitMessage(ChatColor.YELLOW + player.getName() + " has left the game");
+        }
     }
     
     @EventHandler
-    public void onPlayerDeath(PlayerDeathEvent event) {
+    public void onPlayerDeath(PlayerDeathEvent event) 
+    {
     	Entity entity = event.getEntity();
     	
-    	if (entity instanceof Player) {
+    	if (entity instanceof Player) 
+    	{
     		Player player = (Player)entity;
     		
-    		if (combatPlayers.contains(player.getUniqueId())) {
+    		if (combatPlayers.contains(player.getUniqueId())) 
+    		{
     			combatPlayers.remove(player.getUniqueId());
+    			event.setDeathMessage(player.getName() + " combat logged");
     		}
     	}
     }
     
-    private void addCombatPlayer(Player player) {
-    	if (combatPlayers.contains(player.getUniqueId())) {
+    private void addCombatPlayer(Player player) 
+    {
+    	if (combatPlayers.contains(player.getUniqueId())) 
+    	{
     		return;
     	}
     	
@@ -78,7 +90,8 @@ public class PlayerListener implements Listener {
         Entity attacked = event.getEntity();
         Entity attacker = event.getDamager();
         
-        if (attacked instanceof Player && attacker instanceof Player) {
+        if (attacked instanceof Player && attacker instanceof Player) 
+        {
         	addCombatPlayer((Player)attacked);
         	addCombatPlayer((Player)attacker);
         }

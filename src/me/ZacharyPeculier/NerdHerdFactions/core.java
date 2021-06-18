@@ -3,6 +3,7 @@ package me.ZacharyPeculier.NerdHerdFactions;
 import java.util.UUID;
 import java.util.logging.Logger;
 
+import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.command.Command;
@@ -12,7 +13,6 @@ import org.bukkit.plugin.PluginDescriptionFile;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import net.md_5.bungee.api.ChatColor;
 
 import me.ZacharyPeculier.NerdHerdFactions.Listeners.PlayerListener;
 
