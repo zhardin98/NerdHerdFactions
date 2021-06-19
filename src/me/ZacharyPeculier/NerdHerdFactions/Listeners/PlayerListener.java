@@ -21,7 +21,6 @@ public class PlayerListener implements Listener
 {
 	private final Set<UUID> combatPlayers = new HashSet<UUID>();
 	private JavaPlugin plugin;
-	World world = plugin.getServer().getWorld("world");
 
 	public PlayerListener(JavaPlugin plugin)
 	{
@@ -44,10 +43,11 @@ public class PlayerListener implements Listener
 	@EventHandler
 	public void onPlayerLeave(PlayerQuitEvent event)
 	{
+		World world = plugin.getServer().getWorld("world");
 		Player player = event.getPlayer();
 		UUID playerID = player.getUniqueId();
 		long tagTime = plugin.getConfig().getLong(playerID.toString() + ".combatStart");
-		if (combatPlayers.contains(playerID) && tagTime - world.getFullTime() <= 300)
+		if (combatPlayers.contains(playerID) && world.getFullTime() - tagTime <= 300)
 		{
 			for (ItemStack itemStack : player.getInventory().getContents())
 			{
@@ -59,8 +59,13 @@ public class PlayerListener implements Listener
 				player.getWorld().dropItemNaturally(player.getLocation(), itemStack);
 				player.getInventory().remove(itemStack);
 			}
-		} else
+		}
+		else
 		{
+			if (combatPlayers.contains(player.getUniqueId()))
+			{
+				combatPlayers.remove(player.getUniqueId());
+			}
 			event.setQuitMessage(ChatColor.YELLOW + player.getName() + " has left the game");
 		}
 	}
@@ -94,20 +99,21 @@ public class PlayerListener implements Listener
 	}
 
 	@EventHandler
-    public void onPvPDamage(EntityDamageByEntityEvent event)
-    {
-        Entity attacked = event.getEntity();
-        Entity attacker = event.getDamager();
-        
-        if (attacked instanceof Player && attacker instanceof Player) 
-        {
-        	UUID attackedID = attacked.getUniqueId();
-        	UUID attackerID = attacker.getUniqueId();
-        	addCombatPlayer((Player)attacked);
-        	addCombatPlayer((Player)attacker);
-        	plugin.getConfig().set(attackerID.toString() + ".combatStart", world.getFullTime());
-        	plugin.getConfig().set(attackedID.toString() + ".combatStart", world.getFullTime());
-        	plugin.saveConfig();
-        }
-    }
+	public void onPvPDamage(EntityDamageByEntityEvent event)
+	{
+		World world = plugin.getServer().getWorld("world");
+		Entity attacked = event.getEntity();
+		Entity attacker = event.getDamager();
+
+		if (attacked instanceof Player && attacker instanceof Player)
+		{
+			UUID attackedID = attacked.getUniqueId();
+			UUID attackerID = attacker.getUniqueId();
+			addCombatPlayer((Player) attacked);
+			addCombatPlayer((Player) attacker);
+			plugin.getConfig().set(attackerID.toString() + ".combatStart", world.getFullTime());
+			plugin.getConfig().set(attackedID.toString() + ".combatStart", world.getFullTime());
+			plugin.saveConfig();
+		}
+	}
 }
