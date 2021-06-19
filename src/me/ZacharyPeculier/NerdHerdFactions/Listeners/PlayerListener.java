@@ -20,19 +20,23 @@ import org.bukkit.plugin.java.JavaPlugin;
 public class PlayerListener implements Listener
 {
 	private final Set<UUID> combatPlayers = new HashSet<UUID>();
+	World world;
 	private JavaPlugin plugin;
 
 	public PlayerListener(JavaPlugin plugin)
 	{
 		this.plugin = plugin;
+		world = plugin.getServer().getWorld("world");
 	}
 
 	@EventHandler
 	public void onPlayerJoin(PlayerJoinEvent event)
 	{
 		Player player = event.getPlayer();
+		UUID playerID = player.getUniqueId();
 
-		if (combatPlayers.contains(player.getUniqueId()))
+		long tagTime = plugin.getConfig().getLong(playerID.toString() + ".combatStart");
+		if (combatPlayers.contains(player.getUniqueId()) && world.getFullTime() - tagTime <= 300)
 		{
 			player.getInventory().clear();
 			player.setHealth(0);
@@ -43,7 +47,6 @@ public class PlayerListener implements Listener
 	@EventHandler
 	public void onPlayerLeave(PlayerQuitEvent event)
 	{
-		World world = plugin.getServer().getWorld("world");
 		Player player = event.getPlayer();
 		UUID playerID = player.getUniqueId();
 		long tagTime = plugin.getConfig().getLong(playerID.toString() + ".combatStart");
@@ -91,7 +94,10 @@ public class PlayerListener implements Listener
 
 	private void addCombatPlayer(Player player)
 	{
-		if (combatPlayers.contains(player.getUniqueId()))
+		UUID playerID = player.getUniqueId();
+		
+		long tagTime = plugin.getConfig().getLong(playerID.toString() + ".combatStart");
+		if (world.getFullTime() - tagTime <= 300)
 		{
 			return;
 		}
