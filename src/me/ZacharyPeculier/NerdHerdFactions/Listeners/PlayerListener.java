@@ -55,10 +55,12 @@ public class PlayerListener implements Listener
 				{
 					continue;
 				}
-				event.setQuitMessage(ChatColor.YELLOW + player.getName() + " combat logged");
+
 				player.getWorld().dropItemNaturally(player.getLocation(), itemStack);
 				player.getInventory().remove(itemStack);
 			}
+			
+			event.setQuitMessage(ChatColor.YELLOW + player.getName() + " combat logged");
 		}
 		else
 		{

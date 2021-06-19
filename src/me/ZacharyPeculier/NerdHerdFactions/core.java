@@ -48,6 +48,7 @@ public class core extends JavaPlugin
 		Player player = (Player) sender;
 		UUID playerID = player.getUniqueId();
 		long tagTime = getConfig().getLong(playerID.toString() + ".combatStart");
+		
 		if (commandLabel.equalsIgnoreCase("spawn"))
 		{
 			if(world.getFullTime() - tagTime <= 300)
@@ -55,11 +56,9 @@ public class core extends JavaPlugin
 				player.sendMessage(ChatColor.DARK_RED + "You are in combat!");
 				return true;
 			}
-			else
-			{
-				player.teleport(new Location(getServer().getWorld("world"), spawnX, spawnY, spawnZ));
-				return true;
-			}
+			
+			player.teleport(new Location(getServer().getWorld("world"), spawnX, spawnY, spawnZ));
+			return true;
 		}
 		else if (commandLabel.equalsIgnoreCase("sethome"))
 		{
@@ -75,19 +74,18 @@ public class core extends JavaPlugin
 				player.sendMessage(ChatColor.RED + "You are in combat!");
 				return true;
 			}
-			else
+			
+			try
 			{
-				try
-				{
-					Location home = getConfig().getLocation(playerID.toString() + ".homeLocation");
-					player.teleport(home);
-				} 
-				catch (Exception e)
-				{
-					player.sendMessage(ChatColor.RED + "You have no home");
-				}
-				return true;
+				Location home = getConfig().getLocation(playerID.toString() + ".homeLocation");
+				player.teleport(home);
+			} 
+			catch (Exception e)
+			{
+				player.sendMessage(ChatColor.RED + "You have no home");
 			}
+			
+			return true;
 		}
 		else
 		{
