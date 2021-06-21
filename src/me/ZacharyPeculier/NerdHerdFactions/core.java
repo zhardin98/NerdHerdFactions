@@ -62,7 +62,7 @@ public class core extends JavaPlugin
 		}
 		else if (commandLabel.equalsIgnoreCase("sethome"))
 		{
-			Location home = new Location(getServer().getWorld("world"), player.getLocation().getX(), player.getLocation().getY(), player.getLocation().getZ());
+			Location home = new Location(player.getWorld(), player.getLocation().getX(), player.getLocation().getY(), player.getLocation().getZ());
 			getConfig().set(playerID.toString() + ".homeLocation", home);
 			player.sendMessage(ChatColor.GOLD + "Your home has been set!");
 			saveConfig();
